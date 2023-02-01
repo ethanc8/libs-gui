@@ -176,6 +176,7 @@ NSMenu.m \
 NSMenuView.m \
 NSMenuItem.m \
 NSMenuItemCell.m \
+NSMenuToolbarItem.m \
 NSMovie.m \
 NSMovieView.m \
 NSNib.m \
@@ -470,6 +471,7 @@ NSMenu.h \
 NSMenuItem.h \
 NSMenuItemCell.h \
 NSMenuView.h \
+NSMenuToolbarItem.h \
 NSMovie.h \
 NSMovieView.h \
 NSObjectController.h \
