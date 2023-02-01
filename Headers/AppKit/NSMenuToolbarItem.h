@@ -34,8 +34,20 @@
 extern "C" {
 #endif
 
+@class NSMenu;
+  
 APPKIT_EXPORT_CLASS    
 @interface NSMenuToolbarItem : NSToolbarItem
+{
+  NSMenu *_menu;
+  BOOL _showsIndicator;
+}
+
+- (void) setShowsIndicator: (BOOL)flag;
+- (BOOL) showsIndicator;
+
+- (void) setMenu: (NSMenu *)menu;
+- (NSMenu *) menu;
 
 @end
 

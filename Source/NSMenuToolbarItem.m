@@ -23,8 +23,35 @@
 */
 
 #import "AppKit/NSMenuToolbarItem.h"
+#import "AppKit/NSMenu.h"
 
 @implementation NSMenuToolbarItem
+
+- (void) dealloc
+{
+  RELEASE(_menu);
+  [super dealloc];
+}
+
+- (void) setShowsIndicator: (BOOL)flag
+{
+  _showsIndicator = flag;
+}
+
+- (BOOL) showsIndicator
+{
+  return _showsIndicator;
+}
+
+- (void) setMenu: (NSMenu *)menu
+{
+  ASSIGN(_menu, menu);
+}
+
+- (NSMenu *) menu
+{
+  return _menu;
+}
 
 @end
 
