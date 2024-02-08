@@ -72,6 +72,7 @@ APPKIT_EXPORT_CLASS
   NSCell *_dataCell;
   NSString *_headerToolTip;
   NSSortDescriptor *_sortDescriptorPrototype;
+  NSString* _title;
 }
 /* 
  * Initializing an NSTableColumn instance 
@@ -117,6 +118,10 @@ APPKIT_EXPORT_CLASS
  */
 - (void) setHeaderCell: (NSCell *)aCell;
 - (NSCell *) headerCell;
+#if OS_API_VERSION(MAC_OS_X_VERSION_10_10, GS_API_LATEST)
+- (void) setTitle: (NSString *)aString;
+- (NSString *) title;
+#endif
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (void) setHeaderToolTip: (NSString *)aString;
 - (NSString *) headerToolTip;

@@ -125,6 +125,7 @@
   [_dataCell setLineBreakMode: NSLineBreakByTruncatingTail];
   [_dataCell setEditable: YES];
   _headerToolTip = nil;
+  _title = nil;
 
   _sortDescriptorPrototype = nil;
 
@@ -412,10 +413,24 @@ Set the tool tip text displayed when the pointer is in the header area. */
 }
 
 /**
-Return the toop tip text displayed when the pointer is in the header area. */
+Return the tool tip text displayed when the pointer is in the header area. */
 - (NSString *) headerToolTip
 {
   return _headerToolTip;
+}
+
+/**
+Set the column title used if this column is in a view-based table. */
+- (void) setTitle: (NSString *)aString
+{
+  ASSIGN(_title, aString);
+}
+
+/**
+Return the column title used if this column is in a view-based table. */
+- (NSString *) title
+{
+  return _title;
 }
 
 /**
