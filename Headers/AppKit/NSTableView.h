@@ -183,6 +183,7 @@ APPKIT_EXPORT_CLASS
   NSDragOperation _draggingSourceOperationMaskForRemote;
 
   NSInteger _beginEndUpdates;
+  BOOL _viewBased;
 }
 
 /* Data Source */
