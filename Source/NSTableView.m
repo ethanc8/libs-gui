@@ -73,7 +73,7 @@
 
 static NSNotificationCenter *nc = nil;
 
-static const int currentVersion = 5;
+static const int currentVersion = 6;
 
 static NSRect oldDraggingRect;
 static NSInteger oldDropRow;
@@ -2036,6 +2036,7 @@ static void computeNewSelection
       | NSDragOperationLink | NSDragOperationGeneric | NSDragOperationPrivate;
   _draggingSourceOperationMaskForRemote = NSDragOperationNone;
   ASSIGN(_sortDescriptors, [NSArray array]);
+  _viewBased = NO;
 }
 
 - (id) initWithFrame: (NSRect)frameRect
@@ -5500,6 +5501,9 @@ This method is deprecated, use -columnIndexesInRect:. */
 
       // encode..
       [aCoder encodeInt: vFlags forKey: @"NSTvFlags"];
+
+      // Encode that the table is view based...
+      [aCoder encodeBool: _viewBased forKey: @"NSViewBased"];
     }
   else
     {
@@ -5535,6 +5539,7 @@ This method is deprecated, use -columnIndexesInRect:. */
       [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_autoresizesAllColumnsToFit];
       [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_verticalMotionDrag];
       [aCoder encodeObject: _sortDescriptors];
+      [aCoder encodeValueOfObjCType: @encode(BOOL) at: &_viewBased];
     }
 }
 
@@ -5681,6 +5686,11 @@ This method is deprecated, use -columnIndexesInRect:. */
           [self setAllowsColumnReordering: tableViewFlags.columnOrdering];
         }
  
+      if ([aDecoder containsValueForKey: @"NSViewBased"])
+	{
+	  _viewBased = [aDecoder decodeBoolForKey: @"NSViewBased"];
+	}
+
       // get the table columns...
       columns = [aDecoder decodeObjectForKey: @"NSTableColumns"];
       e = [columns objectEnumerator];
@@ -5710,7 +5720,7 @@ This method is deprecated, use -columnIndexesInRect:. */
       _cornerView      = RETAIN([aDecoder decodeObject]);
       aDelegate        = [aDecoder decodeObject];
       _target          = [aDecoder decodeObject];
-
+      
       [self setDelegate: aDelegate];
       [_headerView setTableView: self];
       [_tableColumns makeObjectsPerformSelector: @selector(setTableView:)
@@ -5730,10 +5740,12 @@ This method is deprecated, use -columnIndexesInRect:. */
       [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_allowsEmptySelection];
       [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_allowsColumnSelection];
       [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_allowsColumnResizing];
+
       if (version >= 3)
         {
           [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_allowsColumnReordering];
         }
+
       if (version >= 2)
         {
           [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_autoresizesAllColumnsToFit];
@@ -5743,9 +5755,15 @@ This method is deprecated, use -columnIndexesInRect:. */
         {
           [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_verticalMotionDrag];
         }
+
       if (version >= 5)
 	{
 	  ASSIGN(_sortDescriptors, [aDecoder decodeObject]);
+	}
+
+      if (version >= 6)
+	{
+          [aDecoder decodeValueOfObjCType: @encode(BOOL) at: &_viewBased];	  
 	}
      
       if (_numberOfColumns > 0)
