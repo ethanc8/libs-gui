@@ -269,7 +269,13 @@ APPKIT_EXPORT_CLASS
 - (NSTableViewGridLineStyle) gridStyleMask;
 #endif
 
-/* Proving Cells */
+/*** VIEW-BASED TABLE APIS ***/
+/* Providing Views */
+- (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier 
+                              owner: (id)owner;
+/*** END VIEW-BASED TABLE APIS ***/
+
+/* Providing Cells */
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
 - (NSCell *) preparedCellAtColumn: (NSInteger)columnIndex row: (NSInteger)rowIndex;
