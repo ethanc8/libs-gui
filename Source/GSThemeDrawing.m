@@ -3517,7 +3517,6 @@ static NSDictionary *titleTextAttributes[3] = {nil, nil, nil};
 
   /* Determine ending column as fast as possible */
   x_pos = NSMaxX (clipRect);
-  // Nota Bene: we do *not* reset i
   while ((i < numberOfColumns) && (x_pos > columnOrigins[i]))
     {
       i++;
