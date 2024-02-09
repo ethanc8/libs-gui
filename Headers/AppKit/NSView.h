@@ -39,6 +39,7 @@
 #import <AppKit/NSResponder.h>
 #import <AppKit/NSUserInterfaceLayout.h>
 #import <AppKit/NSLayoutConstraint.h>
+#import <AppKit/NSUserInterfaceItemIdentification.h>
 
 @class NSArray;
 @class NSAttributedString;
@@ -130,7 +131,7 @@ extern const CGFloat NSViewNoInstrinsicMetric;
 extern const CGFloat NSViewNoIntrinsicMetric;
 
 APPKIT_EXPORT_CLASS
-@interface NSView : NSResponder <NSAppearanceCustomization>
+@interface NSView : NSResponder <NSUserInterfaceItemIdentification, NSAppearanceCustomization>
 {
   NSRect _frame;
   NSRect _bounds;
@@ -139,6 +140,7 @@ APPKIT_EXPORT_CLASS
   id _matrixToWindow;
   id _matrixFromWindow;
   id _coreAnimationData;
+  NSUserInterfaceItemIdentifier _identifier;
 
   NSView* _super_view;
 PACKAGE_SCOPE

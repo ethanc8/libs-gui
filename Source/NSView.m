@@ -31,6 +31,8 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include "AppKit/NSUserInterfaceItemIdentification.h"
+#include "GNUstepBase/GNUstep.h"
 #import "config.h"
 #include <math.h>
 #include <float.h>
@@ -5255,6 +5257,14 @@ static NSView* findByTag(NSView *view, NSInteger aTag, NSUInteger *level)
 - (CGFloat) firstBaselineOffsetFromTop
 {
   return 0;
+}
+
+- (NSUserInterfaceItemIdentifier) identifier {
+  return _identifier;
+}
+
+- (void) setIdentifier: (NSUserInterfaceItemIdentifier)identifier {
+  ASSIGN(_identifier, identifier);
 }
 
 /* Implement NSAppearanceCustomization */
