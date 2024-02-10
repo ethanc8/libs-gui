@@ -52,6 +52,7 @@
 #import "AppKit/NSScrollView.h"
 #import "AppKit/NSStringDrawing.h"
 #import "AppKit/NSTableView.h"
+#import "AppKit/NSTableCellView.h"
 #import "AppKit/NSTableColumn.h"
 #import "AppKit/NSTableHeaderCell.h"
 #import "AppKit/NSTableHeaderView.h"
@@ -3480,6 +3481,67 @@ static NSDictionary *titleTextAttributes[3] = {nil, nil, nil};
 
       if (i == editedColumn && rowIndex == editedRow)
 	[cell _setInEditing: NO];
+    }
+}
+
+- (void) drawTableCellViewRow: (NSInteger)rowIndex
+		     clipRect: (NSRect)clipRect
+		       inView: (NSView *)view
+{
+  NSTableView *tableView = (NSTableView *)view;
+  NSInteger numberOfColumns = [tableView numberOfColumns];
+  CGFloat *columnOrigins = [tableView _columnOrigins];
+  NSArray *tableColumns = [tableView tableColumns];
+  NSInteger startingColumn; 
+  NSInteger endingColumn;
+  NSTableColumn *tb;
+  NSRect drawingRect;
+  NSInteger i;
+  CGFloat x_pos;
+  id<NSTableViewDelegate> delegate = [tableView delegate];
+  
+  /* Using columnAtPoint: here would make it called twice per row per drawn 
+     rect - so we avoid it and do it natively */
+
+  /* Determine starting column as fast as possible */
+  x_pos = NSMinX (clipRect);
+  i = 0;
+  while ((i < numberOfColumns) && (x_pos > columnOrigins[i]))
+    {
+      i++;
+    }
+  startingColumn = (i - 1);
+
+  if (startingColumn == -1)
+    startingColumn = 0;
+
+  /* Determine ending column as fast as possible */
+  x_pos = NSMaxX (clipRect);
+  while ((i < numberOfColumns) && (x_pos > columnOrigins[i]))
+    {
+      i++;
+    }
+  endingColumn = (i - 1);
+
+  if (endingColumn == -1)
+    endingColumn = numberOfColumns - 1;
+
+  /* Draw the row between startingColumn and endingColumn */
+  for (i = startingColumn; i <= endingColumn; i++)
+    {
+      tb = [tableColumns objectAtIndex: i];
+      if ([delegate respondsToSelector: @selector(tableView:viewForTableColumn:row:)])
+	{
+	  NSView *view = [delegate tableView: tableView
+				   viewForTableColumn: tb
+					 row: rowIndex];
+	  NSDebugLog(@"View = %@", view);
+	  drawingRect = [tableView frameOfCellAtColumn: i
+						   row: rowIndex];
+
+	  [view setFrame: drawingRect];
+	  [tableView addSubview: view];
+	}
     }
 }
 
