@@ -3537,18 +3537,19 @@ static NSDictionary *titleTextAttributes[3] = {nil, nil, nil};
 	  view = [delegate tableView: tableView
 			   viewForTableColumn: tb
 				 row: rowIndex];
+	  NSDebugLog(@"View = %@", view);
+	  drawingRect = [tableView frameOfCellAtColumn: i
+						   row: rowIndex];
+	  
+	  [view setFrame: drawingRect];
+	  [tableView addSubview: view];      
 	}
+      /*
       else
 	{
 	  view = AUTORELEASE([[NSTableCellView alloc] init]);
 	}
-      
-      NSDebugLog(@"View = %@", view);
-      drawingRect = [tableView frameOfCellAtColumn: i
-					       row: rowIndex];
-      
-      [view setFrame: drawingRect];
-      [tableView addSubview: view];      
+      */      
     }
 }
 
