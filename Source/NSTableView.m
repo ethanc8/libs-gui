@@ -2036,9 +2036,8 @@ static void computeNewSelection
       | NSDragOperationLink | NSDragOperationGeneric | NSDragOperationPrivate;
   _draggingSourceOperationMaskForRemote = NSDragOperationNone;
   ASSIGN(_sortDescriptors, [NSArray array]);
-
   _viewBased = NO;
-  _renderedViewPaths = [[NSMutableArray alloc] init];
+  _renderedViewPaths = RETAIN([NSMapTable strongToWeakObjectsMapTable]);
 }
 
 - (id) initWithFrame: (NSRect)frameRect
@@ -2351,6 +2350,11 @@ static void computeNewSelection
 
 - (void) reloadData
 {
+  if (_viewBased)
+    {
+      [_renderedViewPaths removeAllObjects];
+    }
+  
   [self noteNumberOfRowsChanged];
   [self setNeedsDisplay: YES];
 }
@@ -3855,27 +3859,24 @@ if (currentRow >= 0 && currentRow < _numberOfRows) \
 		  
 		  if (eventType == NSLeftMouseDown)
 		    {
-		      if (_viewBased == NO)
+		      /*
+		       * Can never get here from a dragging source
+		       * so they need to track in mouse up.
+		       */
+		      NSCell *cell = [self preparedCellAtColumn: _clickedColumn 
+							    row: _clickedRow];
+		      
+		      [self _trackCellAtColumn: _clickedColumn
+					   row: _clickedRow
+				     withEvent: theEvent];
+		      didTrackCell = YES;
+		      
+		      if ([[cell class] prefersTrackingUntilMouseUp])
 			{
-			  /*
-			   * Can never get here from a dragging source
-			   * so they need to track in mouse up.
-			   */
-			  NSCell *cell = [self preparedCellAtColumn: _clickedColumn 
-								row: _clickedRow];
-			  
-			  [self _trackCellAtColumn: _clickedColumn
-					       row: _clickedRow
-					 withEvent: theEvent];
-			  didTrackCell = YES;
-			  
-			  if ([[cell class] prefersTrackingUntilMouseUp])
-			    {
-			      /* the mouse could have gone up outside of the cell
-			       * avoid selecting the row under mouse cursor */ 
-			      sendAction = YES;
-			      done = YES;
-			    }
+			  /* the mouse could have gone up outside of the cell
+			   * avoid selecting the row under mouse cursor */ 
+			  sendAction = YES;
+			  done = YES;
 			}
 		    }
 
@@ -7071,7 +7072,7 @@ For a more detailed explanation, -setSortDescriptors:. */
     }
 }
 
-- (NSMutableArray *) _renderedViewPaths
+- (NSMapTable *) _renderedViewPaths
 {
   return _renderedViewPaths;
 }
