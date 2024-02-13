@@ -3533,8 +3533,9 @@ static NSDictionary *titleTextAttributes[3] = {nil, nil, nil};
   /* Draw the row between startingColumn and endingColumn */
   for (i = startingColumn; i <= endingColumn; i++)
     {
-      NSRect drawingRect = drawingRect = [tableView frameOfCellAtColumn: i
-								    row: rowIndex];
+      NSRect drawingRect = [tableView
+			     frameOfCellAtColumn: i
+					     row: rowIndex];
       NSTableColumn *tb = nil;
 
       // drawingRect.origin.y += headerHeight;
@@ -3553,14 +3554,11 @@ static NSDictionary *titleTextAttributes[3] = {nil, nil, nil};
 	  NSEnumerator *en = [protoCellViews objectEnumerator];
 	  id cellView = nil;
 
-	  // NSLog(@"Rect for calculated frame = %@", NSStringFromRect(drawingRect));
-	  
 	  while ((cellView = [en nextObject]) != nil)
 	    {
+	      cellView = [cellView copy]; // instantiate the prototype...
 	      [cellView setFrame: drawingRect];
 	      [tableView addSubview: cellView];
-
-	      NSLog(@"cell view = %@, title = %@", cellView, [[cellView textField] stringValue]);
 	    }
 	}
     }
