@@ -2036,7 +2036,9 @@ static void computeNewSelection
       | NSDragOperationLink | NSDragOperationGeneric | NSDragOperationPrivate;
   _draggingSourceOperationMaskForRemote = NSDragOperationNone;
   ASSIGN(_sortDescriptors, [NSArray array]);
+
   _viewBased = NO;
+  _renderedViewPaths = [[NSMutableArray alloc] init];
 }
 
 - (id) initWithFrame: (NSRect)frameRect
@@ -2068,6 +2070,7 @@ static void computeNewSelection
   RELEASE (_selectedColumns);
   RELEASE (_selectedRows);
   RELEASE (_sortDescriptors);
+  RELEASE (_renderedViewPaths);
   TEST_RELEASE (_headerView);
   TEST_RELEASE (_cornerView);
   if (_autosaveTableColumns == YES)
@@ -7066,6 +7069,11 @@ For a more detailed explanation, -setSortDescriptors:. */
     {
       return [super valueForKey: aKey];
     }
+}
+
+- (NSMutableArray *) _renderedViewPaths
+{
+  return _renderedViewPaths;
 }
 
 @end
