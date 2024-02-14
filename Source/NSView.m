@@ -74,6 +74,7 @@
 #import "AppKit/NSView.h"
 #import "AppKit/NSWindow.h"
 #import "AppKit/NSWorkspace.h"
+#import "AppKit/NSAppearance.h"
 #import "AppKit/PSOperators.h"
 #import "GNUstepGUI/GSDisplayServer.h"
 #import "GNUstepGUI/GSTrackingRect.h"
@@ -5264,6 +5265,30 @@ static NSView* findByTag(NSView *view, NSInteger aTag, NSUInteger *level)
 
 - (void) setIdentifier: (NSUserInterfaceItemIdentifier)identifier {
   ASSIGN(_identifier, identifier);
+}
+
+/* Implement NSAppearanceCustomization */
+- (NSAppearance*) appearance {
+  return _appearance;
+}
+
+- (void) setAppearance: (NSAppearance*) appearance {
+  ASSIGNCOPY(_appearance, appearance);
+}
+
+- (NSAppearance*) effectiveAppearance {
+  if (_appearance)
+  {
+    return _appearance;
+  }
+  else if ([self superview])
+  {
+    return [[self superview] effectiveAppearance];
+  }
+  else
+  {
+    return [NSAppearance currentAppearance];
+  }
 }
 
 @end

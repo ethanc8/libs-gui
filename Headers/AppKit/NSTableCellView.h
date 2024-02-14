@@ -29,6 +29,9 @@
 #import <AppKit/NSCell.h>
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSNibDeclarations.h>
+#import <AppKit/AppKitDefines.h>
+#import <AppKit/NSTableView.h>
+#import <AppKit/NSNibDeclarations.h>
 
 #import <AppKit/AppKitDefines.h>
 
@@ -78,4 +81,3 @@ APPKIT_EXPORT_CLASS
 #endif	/* GS_API_MACOSX */
 
 #endif	/* _NSTableCellView_h_GNUSTEP_GUI_INCLUDE */
-

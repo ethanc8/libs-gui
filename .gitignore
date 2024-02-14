@@ -62,5 +62,7 @@ DerivedData/
 
 # End of https://www.gitignore.io/api/xcode
 
+
 compile_commands.json
 **/.cache
+**/.vscode

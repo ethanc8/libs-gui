@@ -37,6 +37,7 @@
 @class NSSortDescriptor;
 @class NSCell;
 @class NSTableView;
+@class NSMutableArray;
 
 // TODO: Finish to implement hidden, header tool tip and resizing mask 
 // and update the archiving code to support them.
@@ -73,6 +74,7 @@ APPKIT_EXPORT_CLASS
   NSString *_headerToolTip;
   NSSortDescriptor *_sortDescriptorPrototype;
   NSString* _title;
+  NSMutableArray *_prototypeCellViews;
 }
 /* 
  * Initializing an NSTableColumn instance 
