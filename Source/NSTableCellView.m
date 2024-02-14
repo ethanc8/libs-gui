@@ -167,7 +167,4 @@
 }
 
 @end
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/NSTableCellView_branch

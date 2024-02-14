@@ -44,7 +44,4 @@ extern "C" {
 #endif	/* GS_API_MACOSX */
 
 #endif	/* _NSTableRowView_h_GNUSTEP_GUI_INCLUDE */
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/NSTableCellView_branch
