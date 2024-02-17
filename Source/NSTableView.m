@@ -6870,6 +6870,11 @@ For a more detailed explanation, -setSortDescriptors:. */
   return NSNotFound;
 }
 
+- (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier owner:(id)owner
+{
+  return nil;
+}
+
 @end /* implementation of NSTableView */
 
 @implementation NSTableView (SelectionHelper)
