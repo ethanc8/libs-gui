@@ -277,12 +277,6 @@ APPKIT_EXPORT_CLASS
 - (NSTableViewGridLineStyle) gridStyleMask;
 #endif
 
-/*** VIEW-BASED TABLE APIS ***/
-/* Providing Views */
-- (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier 
-                              owner: (id)owner;
-/*** END VIEW-BASED TABLE APIS ***/
-
 /* Providing Cells */
 
 #if OS_API_VERSION(MAC_OS_X_VERSION_10_5, GS_API_LATEST)
@@ -405,6 +399,9 @@ APPKIT_EXPORT_CLASS
 - (void) removeRowsAtIndexes: (NSIndexSet*)indexes withAnimation: (NSTableViewAnimationOptions)animationOptions;
 - (NSInteger) rowForView: (NSView*)view;
 - (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier owner:(id)owner;
+- (NSView *) viewAtColumn: (NSInteger)columnIndex
+                      row: (NSInteger)rowIndex
+          makeIfNecessary: (BOOL)makeIfNecessary;
 #endif
 
 @end /* interface of NSTableView */
