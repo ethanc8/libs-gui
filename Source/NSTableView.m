@@ -3208,16 +3208,6 @@ byExtendingSelection: (BOOL)flag
   return 0;
 }
 
-/*** VIEW-BASED TABLE APIS ***/
-/* Providing Views */
-- (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier 
-                              owner: (id)owner
-{
-	// TODO: Actually recycle views 
-	return nil;
-}
-/*** END VIEW-BASED TABLE APIS ***/
-
 /*
  * Providing Cells
  */
