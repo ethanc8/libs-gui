@@ -6875,6 +6875,72 @@ For a more detailed explanation, -setSortDescriptors:. */
   return nil;
 }
 
+- (NSView *) viewAtColumn: (NSInteger)columnIndex
+                      row: (NSInteger)rowIndex
+          makeIfNecessary: (BOOL)makeIfNecessary
+{
+  if (makeIfNecessary)
+    {
+      [[NSException exceptionWithName: @"Cannot makeIfNecessary" 
+                               reason: @"GNUstep does not support -[NSTableView viewAtColumn:row:makeIfNecessary:YES]"
+                             userInfo: nil] raise];
+    }
+  
+  if (rowIndex >= [self numberOfRows])
+    {
+      [[NSException exceptionWithName: @"Row number out of bounds"
+                               reason: @"The row number is more than or equal to the number of rows"
+                             userInfo: nil] raise];
+    }
+  
+  if (_viewBased)
+    {
+      // Copied from -[GSThemeDrawing drawTableCellViewRow:clipRect:inView:]
+      id<NSTableViewDelegate> delegate = [self delegate];
+      BOOL hasMethod = [delegate respondsToSelector: @selector(tableView:viewForTableColumn:row:)];
+      NSArray *tableColumns = [self tableColumns];
+
+      NSTableColumn *tb = nil;
+      NSIndexPath *path = [NSIndexPath indexPathForItem: columnIndex
+                                              inSection: rowIndex];
+      NSMapTable *paths = [self _renderedViewPaths];
+      NSView *view = [paths objectForKey: path];
+      
+      // If the view has been stored use it, if not
+      // then grab it.
+      if (view == nil)
+        {
+          tb = [tableColumns objectAtIndex: columnIndex];
+          if (hasMethod)
+            {
+              view = [delegate tableView: self
+                              viewForTableColumn: tb
+                                    row: rowIndex];
+            }
+          else
+            {
+              NSArray *protoCellViews = [tb _prototypeCellViews];
+              
+              // it seems there is always one prototype...
+              if ([protoCellViews count] > 0)
+                {
+                  view = [protoCellViews objectAtIndex: 0];
+                  view = [view copy]; // instantiate the prototype...
+                }
+            }
+
+          // Store the object...
+          [paths setObject: view forKey: path];
+          [self addSubview: view];      
+        }
+
+      // Place the view...
+      return view;
+    }
+  
+  return nil;
+}
+
 @end /* implementation of NSTableView */
 
 @implementation NSTableView (SelectionHelper)
