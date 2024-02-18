@@ -33,6 +33,7 @@
 #import <AppKit/NSControl.h>
 #import <AppKit/NSDragging.h>
 #import <AppKit/NSUserInterfaceValidation.h>
+#import <AppKit/NSUserInterfaceItemIdentification.h>
 
 @class NSArray;
 @class NSIndexSet;
@@ -165,7 +166,8 @@ APPKIT_EXPORT_CLASS
    * We cache column origins (precisely, the x coordinate of the left
    * origin of each column).  When a column width is changed through
    * [NSTableColumn setWidth:], then [NSTableView tile] gets called,
-   * which updates the cache.  */
+   * which updates the cache.
+   */
   CGFloat *_columnOrigins;
 
   /*
@@ -184,8 +186,12 @@ APPKIT_EXPORT_CLASS
   NSDragOperation _draggingSourceOperationMaskForRemote;
 
   NSInteger _beginEndUpdates;
+
 @public
+  /* Supporting ivars for view based tables */
   BOOL _viewBased;
+  NSMapTable *_renderedViewPaths;
+  NSMutableDictionary *_registeredViews;
 }
 
 /* Data Source */
@@ -398,6 +404,7 @@ APPKIT_EXPORT_CLASS
 - (void) insertRowsAtIndexes: (NSIndexSet*)indexes withAnimation: (NSTableViewAnimationOptions)animationOptions;
 - (void) removeRowsAtIndexes: (NSIndexSet*)indexes withAnimation: (NSTableViewAnimationOptions)animationOptions;
 - (NSInteger) rowForView: (NSView*)view;
+- (NSView *) makeViewWithIdentifier: (NSUserInterfaceItemIdentifier)identifier owner:(id)owner;
 #endif
 
 @end /* interface of NSTableView */

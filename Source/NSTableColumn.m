@@ -594,7 +594,7 @@ to YES. */
       if ([aDecoder containsValueForKey: @"NSPrototypeCellViews"])
 	{
 	  ASSIGN(_prototypeCellViews, [aDecoder decodeObjectForKey: @"NSPrototypeCellViews"]);
-	}      
+	}
     }
   else
     {
@@ -639,6 +639,11 @@ to YES. */
         }
     }
   return self;
+}
+
+- (NSArray *) _prototypeCellViews
+{
+  return _prototypeCellViews;
 }
 
 - (void) setValue: (id)anObject forKey: (NSString*)aKey
