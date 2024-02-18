@@ -247,6 +247,7 @@
 #import <AppKit/NSTableColumn.h>
 #import <AppKit/NSTableHeaderCell.h>
 #import <AppKit/NSTableHeaderView.h>
+#import <AppKit/NSTableRowView.h>
 #import <AppKit/NSTableView.h>
 #import <AppKit/NSTabView.h>
 #import <AppKit/NSTabViewController.h>
