@@ -34,7 +34,8 @@ extern "C" {
 #endif
 
 @interface NSTableRowView : NSView
-
+- (NSColor*) backgroundColor;
+- (void) setBackgroundColor: (NSColor*) color;
 @end
 
 #if	defined(__cplusplus)
