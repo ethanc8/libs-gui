@@ -60,6 +60,7 @@
 #import "AppKit/NSScrollView.h"
 #import "AppKit/NSTableColumn.h"
 #import "AppKit/NSTableHeaderView.h"
+#import "AppKit/NSTableRowView.h"
 #import "AppKit/NSText.h"
 #import "AppKit/NSTextFieldCell.h"
 #import "AppKit/NSWindow.h"
@@ -177,6 +178,10 @@ typedef struct _tableViewFlags
 @interface NSTableView (EventLoopHelper)
 - (void) _trackCellAtColumn:(NSInteger)column row:(NSInteger)row withEvent:(NSEvent *)ev;
 - (BOOL) _startDragOperationWithEvent:(NSEvent *)theEvent;
+@end
+
+@interface NSTableColumn (Private)
+- (NSArray *) _prototypeCellViews;
 @end
 
 /*
@@ -2052,6 +2057,7 @@ static void computeNewSelection
   _pathsToViews = RETAIN([NSMapTable weakToStrongObjectsMapTable]);
   _registeredNibs = [[NSMutableDictionary alloc] init];
   _registeredViews = [[NSMutableDictionary alloc] init];
+  _rowViews = [[NSMutableArray alloc] init];
 }
 
 - (id) initWithFrame: (NSRect)frameRect
@@ -2087,6 +2093,7 @@ static void computeNewSelection
   RELEASE (_pathsToViews);
   RELEASE (_registeredNibs);
   RELEASE (_registeredViews);
+  RELEASE (_rowViews);
   TEST_RELEASE (_headerView);
   TEST_RELEASE (_cornerView);
   if (_autosaveTableColumns == YES)
@@ -2371,6 +2378,7 @@ static void computeNewSelection
     {
       [_renderedViewPaths removeAllObjects];
       [_pathsToViews removeAllObjects];
+      [_rowViews removeAllObjects];
     }
   
   [self noteNumberOfRowsChanged];
@@ -6919,13 +6927,13 @@ For a more detailed explanation, -setSortDescriptors:. */
 	  if (loaded)
 	    {
 	      NSEnumerator *en = [tlo objectEnumerator];
-	      id o = nil;
+	      id v = nil;
 	      
-	      while ((o = [en nextObject]) != nil)
+	      while ((v = [en nextObject]) != nil)
 		{
-		  if ([o isKindOfClass: [NSView class]])
+		  if ([v isKindOfClass: [NSView class]])
 		    {
-		      view = o;
+		      view = v;
 		      break;
 		    }
 		}
@@ -6937,6 +6945,88 @@ For a more detailed explanation, -setSortDescriptors:. */
 	}
     }
   
+  return view;
+}
+
+- (id) _prototypeCellViewFromTableColumn: (NSTableColumn *)tb
+{
+  NSArray *protoCellViews = [tb _prototypeCellViews];
+  id view = nil;
+  
+  // it seems there is always one prototype...
+  if ([protoCellViews count] > 0)
+    {
+      view = [protoCellViews objectAtIndex: 0];
+      view = [view copy]; // instantiate the prototype...
+    }
+
+  return view;
+}
+
+- (NSTableRowView *) rowViewAtRow: (NSInteger)row makeIfNecessary: (BOOL)flag
+{
+  NSTableRowView *rv = nil;
+
+  if (_viewBased == YES)
+    {
+      // NSLog(@"_rowViews = %@", _rowViews);
+      if (row < [_rowViews count])
+	{
+	  rv = [_rowViews objectAtIndex: row];
+	}
+      
+      if (rv == nil)
+	{
+	  if (flag == YES)
+	    {
+	      if ([_delegate respondsToSelector: @selector(tableView:rowViewForRow:)])
+		{
+		  rv = [_delegate tableView: self rowViewForRow: row];
+		}
+	    }
+	  
+	  if (rv == nil)
+	    {
+	      rv = [[NSTableRowView alloc] init];
+	    }
+	  
+	  [_rowViews addObject: rv];
+	}
+    }
+  
+  return rv;
+}
+
+- (NSView *) viewAtColumn: (NSInteger)column row: (NSInteger)row makeIfNecessary: (BOOL)flag
+{
+  NSTableColumn *tb = [_tableColumns objectAtIndex: column];
+  NSIndexPath *path = [NSIndexPath indexPathForItem: column
+					  inSection: row];
+  NSView *view = [self _renderedViewForPath: path];
+  NSRect drawingRect = [self frameOfCellAtColumn: column
+					     row: row];
+  
+  // If the view has been stored use it, if not
+  // then grab it.
+  if (view == nil
+      && flag == YES)
+    {
+      if ([_delegate respondsToSelector: @selector(tableView:viewForTableColumn:row:)])
+	{
+	  view = [_delegate tableView: self
+		   viewForTableColumn: tb
+				  row: row];
+	}
+      else
+	{
+	  view = [self _prototypeCellViewFromTableColumn: tb];
+	}
+    }
+
+  // [view setPostsFrameChangedNotifications: NO];
+  [view setFrame: drawingRect];
+  [self _setRenderedView: view forPath: path];
+
   return view;
 }
 
