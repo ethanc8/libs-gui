@@ -346,6 +346,10 @@ APPKIT_EXPORT_CLASS
         } tracking;
       struct
         {
+          CGFloat magnification;
+        } magnify;
+      struct
+        {
           short sub_type;
           NSInteger data1;
           NSInteger data2;

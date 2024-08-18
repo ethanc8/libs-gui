@@ -1246,4 +1246,9 @@ static const char *eventTypes[] = {
   return NSEventPhaseNone;
 }
 
+- (CGFloat) magnification
+{
+  return event_data.magnify.magnification;
+}
+
 @end
